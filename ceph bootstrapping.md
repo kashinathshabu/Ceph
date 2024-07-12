@@ -1,6 +1,5 @@
 # Installetion of Ceph
-Installation of ceph on  fully on docker for getting the clean OS.
-Here we willl be using podman insted of docker 
+Minimal installation of ceph and depending on podman for getting the clean host.
 
 Here we uses parallel command execution - which enables us to parallely sent a command froma a single machone to multiple machines at the same time. `sudo apt install pdsh`
 
@@ -43,9 +42,9 @@ Try to login to the dashboard using the username and password we got from the bo
   done
   ```
 
-Pull ceph images from the docker
+- Pull ceph images from the docker
 
-    podman pull quay.io/ceph/ceph:v17.2.0
+      podman pull quay.io/ceph/ceph:v17.2.0
 
 ## 5. Adding hosts
 
@@ -56,7 +55,6 @@ for i in [1-5]
 do
 	ceph orch host add node$i 192.168.85.$i
 done
-
 ```
 
 ## 6. Adding OSD
