@@ -1,0 +1,40 @@
+RBD MIRRORING
+
+THREE types ==> snapshot , journal [unidirectional / bidirectional]
+
+On unidirectional we can only mirror rbd images from source (clusterA) => target (cluster)
+On Bidirectional we can mirror images from clusterA => clusterB  &&  clusterB => clusterA
+
+No rbd image can be used simultaneous on both cluster at the same time 
+Images will be primary on the main cluster image & secondary on the backup cluster image ! 
+
+If the same images on the both clusterA & cluster is set as primary , then it can lead to mirroring error 'split-brain' 
+
+On both cluster
+•	Create rbd-mirror service  
+•	Enable mirroring module     ==>    ceph mgr module enable mirroring    
+
+After starting rbd-mirror service rbd mirror client keyring will be created automatically
+
+On target server 
+        Create pool peer bootstrap token =>        rbd mirror pool peer bootstrap create --site-name LOCAL_SITE_NAME POOL_NAME    [LOCAL_SITE_NAME  is the name which we give locally (clusterB) ]
+
+						   rbd mirror pool peer bootstrap create --site-name backup_ceph rbd
+
+On main cluster 
+
+	save the target cluster bearer token to a file 
+
+	And import it to the cluster  =>      rbd mirror pool peer bootstrap import --site-name LOCAL_SITE_NAME --direction rx-tx POOL_NAME PATH_TO_BOOTSTRAP_TOKEN  [LOCAL_SITE_NAME  is the name which we give locally (clusterB) ]
+
+					      rbd mirror pool peer bootstrap import --site-name clusterA --direction rx-tx rbd /root/bootstrap_token_rbd-mirror.site-a
+
+
+
+rbd create image1 --size 1024 --pool data --image-feature exclusive-lock,journaling   /    rbd feature enable POOL_NAME/IMAGE_NAME FEATURE [,FEATURE]
+
+
+rbd mirror pool enable POOL_NAME MODE
+
+
+rbd mirror pool info POOL_NAME
