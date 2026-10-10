@@ -1,4 +1,4 @@
-# Installetion of Ceph
+# Installation of Ceph
 Minimal installation of ceph and depending on podman for getting the clean host.
 
 Here we uses parallel command execution - which enables us to parallely sent a command froma a single machone to multiple machines at the same time. `sudo apt install pdsh`
